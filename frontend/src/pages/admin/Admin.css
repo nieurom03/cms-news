@@ -1,0 +1,51 @@
+.admin-form {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.admin-form button {
+  background: #3498db;
+  color: white;
+  align-self: flex-start;
+}
+
+.admin-table {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-table th {
+  background: #34495e;
+  color: white;
+}
+
+.admin-table button {
+  margin-right: 10px;
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.admin-table button:first-child {
+  background: #3498db;
+  color: white;
+}
+
+.admin-table button:last-child {
+  background: #e74c3c;
+  color: white;
+}

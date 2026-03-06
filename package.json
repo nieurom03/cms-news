@@ -1,0 +1,15 @@
+{
+  "name": "news-cms",
+  "version": "1.0.0",
+  "description": "CMS quản lý tin tức",
+  "scripts": {
+    "server": "cd backend && npm dev",
+    "client": "cd frontend && PORT=3002 npm start",
+    "dev": "npm run server & npm run client",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "seed": "cd backend && npm run seed"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
