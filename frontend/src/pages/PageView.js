@@ -1,28 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import api from '../config/api';
+import { fetchPage } from '../redux/actions/pageActions';
 import Header from '../components/Header';
 import './PageView.css';
 
 const PageView = () => {
   const { slug } = useParams();
-  const [page, setPage] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { page, loading, error } = useSelector(state => state.pages);
 
   useEffect(() => {
-    loadPage();
-  }, [slug]);
-
-  const loadPage = async () => {
-    try {
-      const res = await api.get(`/public/pages/${slug}`);
-      setPage(res.data);
-    } catch (error) {
-      console.error('Error loading page:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    dispatch(fetchPage(slug));
+  }, [slug, dispatch]);
 
   if (loading) {
     return (
@@ -30,6 +20,18 @@ const PageView = () => {
         <Header />
         <div className="container">
           <p>Đang tải...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <Header />
+        <div className="container">
+          <h1>Lỗi</h1>
+          <p>{error}</p>
         </div>
       </div>
     );

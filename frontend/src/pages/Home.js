@@ -1,18 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import api from '../config/api';
+import { fetchArticles } from '../redux/actions/articleActions';
+import { fetchAds } from '../redux/actions/adActions';
 import Header from '../components/Header';
 import './Home.css';
 
 const Home = () => {
-  const [articles, setArticles] = useState([]);
-  const [ads, setAds] = useState([]);
+  const dispatch = useDispatch();
+  const { articles, loading, error } = useSelector(state => state.articles);
+  const { ads = [] } = useSelector(state => state.ads);
 
   useEffect(() => {
-    // Sử dụng public API
-    api.get('/public/articles').then(res => setArticles(res.data));
-    api.get('/public/ads').then(res => setAds(res.data));
-  }, []);
+    dispatch(fetchArticles());
+    dispatch(fetchAds());
+  }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div>
+        <Header />
+        <div className="container">
+          <p>Đang tải...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <Header />
+        <div className="container">
+          <p>Lỗi: {error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
