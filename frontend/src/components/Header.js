@@ -1,13 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Navigation from './Navigation';
-import './Header.css';
 
 const Header = () => {
   return (
-    <header className="header">
-      <div className="container">
-        <Link to="/" className="logo">Tin Tức 24h</Link>
+    <header className="bg-gray-800 text-white shadow-lg">
+      <div className="container flex justify-between items-center py-4">
+        <Link to="/" className="text-2xl font-bold hover:text-blue-400 transition">
+          Tin Tức 24h
+        </Link>
         <Navigation location="header" />
       </div>
     </header>

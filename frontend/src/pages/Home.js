@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchArticles } from '../redux/actions/articleActions';
 import { fetchAds } from '../redux/actions/adActions';
 import Header from '../components/Header';
-import './Home.css';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -20,8 +19,8 @@ const Home = () => {
     return (
       <div>
         <Header />
-        <div className="container">
-          <p>Đang tải...</p>
+        <div className="container py-12">
+          <p className="text-center text-gray-600">Đang tải...</p>
         </div>
       </div>
     );
@@ -31,8 +30,8 @@ const Home = () => {
     return (
       <div>
         <Header />
-        <div className="container">
-          <p>Lỗi: {error}</p>
+        <div className="container py-12">
+          <p className="text-center text-red-600">Lỗi: {error}</p>
         </div>
       </div>
     );
@@ -41,37 +40,46 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <div className="container home-page">
+      <div className="container py-8">
+        {/* Header Ads */}
         {ads.filter(a => a.position === 'header').map(ad => (
-          <div key={ad.id} className="ad-banner">
+          <div key={ad.id} className="mb-8 rounded-lg overflow-hidden shadow-lg">
             <a href={ad.link} target="_blank" rel="noopener noreferrer">
-              <img src={ad.image} alt={ad.title} />
+              <img src={ad.image} alt={ad.title} className="w-full h-48 object-cover hover:opacity-90 transition" />
             </a>
           </div>
         ))}
         
-        <div className="content-wrapper">
-          <main className="articles-grid">
-            {articles.map(article => (
-              <article key={article.id} className="article-card">
-                {article.featuredImage && (
-                  <img src={article.featuredImage} alt={article.title} />
-                )}
-                <h2><Link to={`/article/${article.slug}`}>{article.title}</Link></h2>
-                <p>{article.excerpt}</p>
-                <div className="meta">
-                  <span>{new Date(article.createdAt).toLocaleDateString('vi-VN')}</span>
-                  <span>{article.views} lượt xem</span>
-                </div>
-              </article>
-            ))}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <main className="lg:col-span-2">
+            <div className="grid gap-6">
+              {articles.map(article => (
+                <article key={article.id} className="card hover:shadow-lg transition">
+                  {article.featuredImage && (
+                    <img src={article.featuredImage} alt={article.title} className="w-full h-48 object-cover rounded-lg mb-4" />
+                  )}
+                  <h2 className="text-2xl font-bold mb-2">
+                    <Link to={`/article/${article.slug}`} className="text-blue-600 hover:text-blue-800">
+                      {article.title}
+                    </Link>
+                  </h2>
+                  <p className="text-gray-600 mb-4">{article.excerpt}</p>
+                  <div className="flex justify-between text-sm text-gray-500">
+                    <span>{new Date(article.createdAt).toLocaleDateString('vi-VN')}</span>
+                    <span>{article.views} lượt xem</span>
+                  </div>
+                </article>
+              ))}
+            </div>
           </main>
           
-          <aside className="sidebar-ads">
+          {/* Sidebar Ads */}
+          <aside className="space-y-6">
             {ads.filter(a => a.position === 'sidebar').map(ad => (
-              <div key={ad.id} className="ad-sidebar">
+              <div key={ad.id} className="rounded-lg overflow-hidden shadow-lg">
                 <a href={ad.link} target="_blank" rel="noopener noreferrer">
-                  <img src={ad.image} alt={ad.title} />
+                  <img src={ad.image} alt={ad.title} className="w-full hover:opacity-90 transition" />
                 </a>
               </div>
             ))}

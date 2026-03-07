@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fetchPage } from '../redux/actions/pageActions';
 import Header from '../components/Header';
-import './PageView.css';
 
 const PageView = () => {
   const { slug } = useParams();
@@ -18,8 +17,8 @@ const PageView = () => {
     return (
       <div>
         <Header />
-        <div className="container">
-          <p>Đang tải...</p>
+        <div className="container py-12">
+          <p className="text-center text-gray-600">Đang tải...</p>
         </div>
       </div>
     );
@@ -29,9 +28,9 @@ const PageView = () => {
     return (
       <div>
         <Header />
-        <div className="container">
-          <h1>Lỗi</h1>
-          <p>{error}</p>
+        <div className="container py-12">
+          <h1 className="text-3xl font-bold text-red-600">Lỗi</h1>
+          <p className="text-gray-600 mt-4">{error}</p>
         </div>
       </div>
     );
@@ -41,9 +40,9 @@ const PageView = () => {
     return (
       <div>
         <Header />
-        <div className="container">
-          <h1>Không tìm thấy trang</h1>
-          <p>Trang bạn đang tìm kiếm không tồn tại.</p>
+        <div className="container py-12">
+          <h1 className="text-3xl font-bold text-gray-800">Không tìm thấy trang</h1>
+          <p className="text-gray-600 mt-4">Trang bạn đang tìm kiếm không tồn tại.</p>
         </div>
       </div>
     );
@@ -52,11 +51,11 @@ const PageView = () => {
   return (
     <div>
       <Header />
-      <div className={`container page-view page-template-${page.template}`}>
-        <article className="page-content">
-          <h1>{page.title}</h1>
+      <div className="container py-12">
+        <article className="card max-w-3xl mx-auto">
+          <h1 className="text-4xl font-bold mb-6 text-gray-800">{page.title}</h1>
           <div
-            className="content"
+            className="prose prose-lg max-w-none"
             dangerouslySetInnerHTML={{ __html: page.content }}
           />
         </article>

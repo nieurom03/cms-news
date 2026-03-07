@@ -7,6 +7,8 @@ import './Menus.css';
 const Menus = () => {
   const [menus, setMenus] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState(null);
+  const [pages, setPages] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [menuForm, setMenuForm] = useState({ name: '', location: 'header', active: true });
   const [itemForm, setItemForm] = useState({
     label: '',
@@ -21,11 +23,31 @@ const Menus = () => {
 
   useEffect(() => {
     loadMenus();
+    loadPages();
+    loadCategories();
   }, []);
 
   const loadMenus = async () => {
     const res = await api.get('/admin/menus');
     setMenus(res.data);
+  };
+
+  const loadPages = async () => {
+    try {
+      const res = await api.get('/admin/pages');
+      setPages(res.data);
+    } catch (error) {
+      console.error('Error loading pages:', error);
+    }
+  };
+
+  const loadCategories = async () => {
+    try {
+      const res = await api.get('/admin/categories');
+      setCategories(res.data);
+    } catch (error) {
+      console.error('Error loading categories:', error);
+    }
   };
 
   const handleMenuSubmit = async (e) => {
@@ -179,19 +201,65 @@ const Menus = () => {
                 onChange={e => setItemForm({...itemForm, label: e.target.value})}
                 required
               />
-              <input
-                placeholder="URL"
-                value={itemForm.url}
-                onChange={e => setItemForm({...itemForm, url: e.target.value})}
-              />
+              
               <select
                 value={itemForm.type}
-                onChange={e => setItemForm({...itemForm, type: e.target.value})}
+                onChange={e => setItemForm({...itemForm, type: e.target.value, url: ''})}
               >
-                <option value="link">Link</option>
+                <option value="link">Link tùy chỉnh</option>
                 <option value="category">Danh mục</option>
                 <option value="page">Trang</option>
               </select>
+
+              {itemForm.type === 'link' && (
+                <input
+                  placeholder="URL"
+                  value={itemForm.url}
+                  onChange={e => setItemForm({...itemForm, url: e.target.value})}
+                  required
+                />
+              )}
+
+              {itemForm.type === 'page' && (
+                <select
+                  value={itemForm.url}
+                  onChange={e => {
+                    const selectedPage = pages.find(p => p.slug === e.target.value);
+                    setItemForm({
+                      ...itemForm,
+                      url: `/page/${e.target.value}`,
+                      label: !itemForm.label || itemForm.label === '' ? selectedPage?.title : itemForm.label
+                    });
+                  }}
+                  required
+                >
+                  <option value="">-- Chọn trang --</option>
+                  {pages.map(page => (
+                    <option key={page.id} value={page.slug}>{page.title}</option>
+                  ))}
+                </select>
+              )}
+
+              {itemForm.type === 'category' && (
+                <select
+                  value={itemForm.url}
+                  onChange={e => {
+                    const selectedCat = categories.find(c => c.slug === e.target.value);
+                    setItemForm({
+                      ...itemForm,
+                      url: `/category/${e.target.value}`,
+                      label: !itemForm.label || itemForm.label === '' ? selectedCat?.name : itemForm.label
+                    });
+                  }}
+                  required
+                >
+                  <option value="">-- Chọn danh mục --</option>
+                  {categories.map(cat => (
+                    <option key={cat.id} value={cat.slug}>{cat.name}</option>
+                  ))}
+                </select>
+              )}
+
               <select
                 value={itemForm.target}
                 onChange={e => setItemForm({...itemForm, target: e.target.value})}
@@ -199,6 +267,7 @@ const Menus = () => {
                 <option value="_self">Cùng tab</option>
                 <option value="_blank">Tab mới</option>
               </select>
+
               <select
                 value={itemForm.parentId || ''}
                 onChange={e => setItemForm({...itemForm, parentId: e.target.value || null})}
@@ -208,6 +277,7 @@ const Menus = () => {
                   <option key={item.id} value={item.id}>{item.label}</option>
                 ))}
               </select>
+
               <button type="submit">{editingItem ? 'Cập nhật' : 'Thêm item'}</button>
               {editingItem && (
                 <button type="button" onClick={() => {
